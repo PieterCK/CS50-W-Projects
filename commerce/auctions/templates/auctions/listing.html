@@ -1,0 +1,61 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+{% load crispy_forms_tags %}
+    <div class="border bidding_body">
+        {% if info_msg %}
+                {{info_msg.as_p}}
+            {% endif %}
+        <figure class="figure">
+            <img src="{{listing.image_url}}" class="figure-img img-fluid rounded listing_img2" alt="{{listing.title}}">
+            <figcaption class="figure-caption">Title = {{listing.title}}</figcaption>
+          </figure>
+        <div>Description = {{listing.description}}</div>
+        <p>Price = {{listing.current_price}}</p>
+        <p>Seller = {{listing.owner}}</p>
+        <form action="{% url 'watchlist' %}" method="POST">
+            {% csrf_token %}
+            <input type="hidden", name="listing", value="{{listing.id}}">
+            <input type="submit" class="btn btn-secondary btn-sm" name ="status" value="{{form_value}}">
+        </form>
+        <div>
+            <table class="table">
+                <thead>
+                  <tr>
+                    <th scope="col">Bidder</th>
+                    <th scope="col">Amount</th>
+                  </tr>
+                </thead>
+                <tbody>
+                {% if bidders_info %}
+                    {% for info in bidders_info %}
+                    <tr>
+                        <td>{{info.bidder}}</td>
+                        <td>{{info.amount}}</td>
+                    </tr>
+                    {%endfor%}
+                {%endif%}
+                    <tr>
+                        <td>-</td>
+                        <td>-</td>
+                    </tr>
+                </tbody>
+              </table>
+        </div>
+        {% if form.errors %}
+            <ul class="errorlist">
+                {% for field in form %}
+                    {% for error in field.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                {% endfor %}
+            </ul>
+        {% endif %}
+        {% if user.is_authenticated %}
+            {% if error_msg %}
+                {{error_msg.as_p}}
+            {% endif %}
+            {% crispy form %}
+        {% endif %}
+    </div>
+{% endblock %}

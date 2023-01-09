@@ -1,0 +1,313 @@
+body{
+    background:#202124;
+    font-family: "Droid Sans";
+    display: flex;
+    flex-direction: column;
+}
+
+.col {
+    display:flex;
+    flex-direction: column;
+}
+
+nav > div{
+    text-align: right;
+    margin: 10px;
+    padding: 0.7rem;
+}
+nav > button{
+    text-align: left;
+    padding: 0.7rem;
+    position:absolute;
+}
+
+nav a {
+    color: #fff;
+    margin: 5px;
+    text-decoration:none;
+}
+
+.main div{
+    text-align: center;
+}
+
+.main {
+    flex-grow:1;
+}
+
+#inputBar{
+    border:none;
+    background-color:transparent:
+}
+
+.container {
+    margin: 0 auto;
+    width:568px;
+}
+
+.container_top {
+    margin: 40px auto;
+    height:84px;
+}
+
+.container_bot {
+    margin: 15px auto;
+}
+
+.container_bot>button {
+    margin: 10px auto;
+    background-color:#444;
+    margin-left: 10px;
+    margin-right: 10px;
+    outline-style:hidden;
+    color: #fff;
+    height: 36px;
+    width: 150px;
+    text-align: center;
+}
+
+.container_bot>button:hover {
+    margin: 10px auto;
+    margin-left: 10px;
+    margin-right: 10px;
+    background-color:#999;
+    border: 1px;
+    color: #fff;
+    height: 36px;
+    width: 150px;
+}
+
+.inputbar {
+    height:44px;
+    display:flex;
+    align-items:center;
+}
+.inputbar:hover {
+    background-color:#777;
+}
+.inputbar:focus {
+    background-color:#777;
+}
+
+.inputcol {
+    border:none;
+    background-color:#fff0;
+    width: 420px;
+    height: 30px;
+    color: #fff;
+    margin-left:10px;
+    margin-right:10px;
+}
+.inputcol2 {
+    border:none;
+    background-color:#fff0;
+    width: 390px;
+    height: 30px;
+    color: #fff;
+    margin-left:10px;
+    margin-right:10px;
+}
+.inputcol2:focus {
+    color: #fff;
+    outline: none;
+}
+
+.inputcol:focus {
+    color: #fff;
+    outline: none;
+}
+
+.srcicon{
+    height: 15px;
+    width: 15px;
+    text-align: left;
+    margin-left:15px;
+    margin-right:15px;
+}
+
+.bot_sect {
+    color: #FFF;
+    position: relative;
+    bottom:0;
+}
+
+.bot_sect>div {
+    height: 50px;
+    background-color: #222;
+    color: #FFF;
+}
+.imgTxt {
+    color:blue;
+    text-align:right;
+    font-size:18px;
+    position: absolute;
+    left: 777px;
+    bottom: 481px;
+    white-space: nowrap;
+}
+
+.srcicon2 {
+    object-fit: cover;
+    height: 26px;
+}
+.srcicon3 {
+    object-fit: cover;
+    height: 22px;
+    margin: 0px 10px 0px 10px;
+}
+
+.imgBtn {
+    background: transparent;
+    border: none;
+    outline:none;
+}
+
+.advBody .imgBtn {
+
+}
+
+.advNav{
+    display:flex;
+    flex-direction: row;
+
+}
+
+.imgBtnIcon {
+    object-fit:cover;
+    width:75px;
+    margin:8px;
+}
+
+#imgSrc {
+    display:flex;
+    flex-direction:row;
+
+}
+
+.advSrcMenu input {
+    border: 0.1px solid grey;
+    background:transparent;
+    width:490px;
+    color: #c2c2c2;
+    font-family: "Arial";
+    font-size:12px;
+}
+
+.advSrcMenu span {
+    color: white;
+    font-family: "Arial";
+    font-size:10px;
+    letter-spacing:1.3px;
+}
+
+.advSrcMenu input:focus {
+    border: 0.1px solid cyan;
+    outline: none;
+}
+
+.advSrcMenu > * {
+    color:white;
+}
+
+
+.advQuery {
+    display:flex;
+}
+
+.queryWrp {
+    border: none;
+    outline: none;
+    background: transparent;
+    max-width:fit-content;
+    display:flex;
+    flex-grow:1;
+    height:32px;
+    margin: 0px 0px 10px 0px;
+    justify-content: center;
+}
+.queryWrp p {
+    margin:0px 10px 0px 10px;
+    justify-content: center;
+}
+
+.advLabel {
+    flex-grow:1;
+    width: 160px;
+    padding: 0px 0px 0px 18px;
+    align-self:center;
+    font-size:12px;
+    color: #c2c2c2;
+    letter-spacing:1px;
+}
+
+.advLabel2 {
+    flex-grow:1;
+    width:0px;
+    padding:10px;
+    align-self:center;
+    font-size:12px;
+    color: #c2c2c2;
+    letter-spacing:1px;
+}
+
+.queryHdr {
+    background: transparent;
+    display:flex;
+    flex-grow:1;
+    width:10px;
+    font-size:16px;
+    align-self:center;
+}
+.queryHdr1 {
+    background: transparent;
+    display:flex;
+    flex-grow:1;
+    width:0px;
+    text-align:center;
+    padding:10px;
+    align-self:center;
+}
+
+.advBody {
+    font-family: "Arial";
+}
+
+.advHeader {
+    height:85px;
+    display:block;
+    color: #ffa0a0;
+    font-size:28px;
+    padding:30px;
+    margin-bottom:30px;
+    vertical-align:middle;
+    border-bottom:1px solid grey;
+}
+
+.advContainer {
+    margin:0px 90px 0px 32px;
+    padding:0px 90px 0px 32px;
+}
+
+#doubleInp {
+    width:230px;
+}
+.advHeader2 {
+    height:85px;
+    display:block;
+    color: #ffa0a0;
+    font-size:28px;
+    padding:30px;
+    margin:30px;
+    vertical-align:middle;
+    border-bottom:1px solid grey;
+}
+
+.advHeader2> button {
+    background: #8ab4f8;
+    border-color: #8ab4f8;
+    color: #f7f7f7;
+    float: right;
+    font-size:14px;
+    height:40px;
+    margin-right:310px;
+}

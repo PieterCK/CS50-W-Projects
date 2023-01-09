@@ -1,0 +1,22 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+<div class="listing_body ">
+    {% if category %}
+    {% for items in category %}
+    <a href="{% url 'lists' items.id %}" class="listing_wrp">
+        <div class="border">
+            {% if items.image_url %}
+            <img src="{{items.image_url}}" class="listing_img">
+            {% endif %}
+            <p>Title = {{items.title}}</p>
+            <p>Description = {{items.description}}</p>
+            <p>Price = {{items.current_price}}</p>
+            <p>Seller = {{items.owner}}</p>
+        </div>
+    </a>
+    {% endfor %}
+    {% endif %}
+</div>
+{% endblock %}
+
