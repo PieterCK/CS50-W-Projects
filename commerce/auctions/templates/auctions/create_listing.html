@@ -19,7 +19,10 @@
                     {% endfor %}
                 </ul>
             {% else %}
-            {% crispy form %}
+            <form method="POST" action="{% url 'create_listing' %}">
+                {% crispy form %}
+            </form>
+            
             {% endif %}
         </div>
     </div>
