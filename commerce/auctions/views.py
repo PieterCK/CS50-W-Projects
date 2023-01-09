@@ -147,13 +147,16 @@ def watchlist(request):
 
 @login_required(login_url='login')
 def create_listing(request):
-    listing_forms = modelform_factory(AUCTION_LISTINGS, fields='__all__')
+    user = request.user
     if request.method == "GET":
-        return render(request, "auctions/create_listing.html", {"form": listing_forms})
-    form = listing_forms(request.POST)
+        return render(request, "auctions/create_listing.html", {"form": listing_form})
+    form = listing_form(request.POST)
     if not form.is_valid():
         return render(request, "auctions/create_listing.html", {"form": form})
-    form.save()
+    new_listing = form.save(commit=False)
+    new_listing.owner = User.objects.get(id=user.id)
+    new_listing.save()
+    form.save_m2m()
     NEW_LISTING = AUCTION_LISTINGS.objects.get(
         title=form.cleaned_data["title"])
     return HttpResponseRedirect("listing/"+str(NEW_LISTING.id))
