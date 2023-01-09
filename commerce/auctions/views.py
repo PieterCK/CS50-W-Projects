@@ -1,7 +1,7 @@
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from .utils import listing_form, auto_bidding_form
@@ -77,10 +77,19 @@ def category(request, specified_category):
 
 
 def listing(request, list_id):
+    
     # General Info
     listing = AUCTION_LISTINGS.objects.get(id=list_id)
     user = request.user
 
+    # Recognize listing owner
+    owner = User.objects.get(id = user.id)
+    seller = owner.selling.values_list("id", flat=True)
+    viewer_status= None
+    if int(list_id) in seller:
+        viewer_status = user.id
+    ### TO DO: install edit listing button for owner of listing
+    
     # Bidding Infos
     bidders_info = listing.past_bids.all()
     top_bid = 0
@@ -102,7 +111,8 @@ def listing(request, list_id):
         "form": auto_bidding_form(top_bid, list_id),
         "bidders_info": bidders_info,
         "error_msg": None,
-        "info_msg": None
+        "info_msg": None,
+        "viewer_status": viewer_status
     }
 
     # GET Request handler
@@ -163,4 +173,38 @@ def create_listing(request):
 
 @login_required(login_url='login')
 def edit_listing(request, list_id):
+    user = request.user
+
+    # Redirect if not owner of listing
+    owner = User.objects.get(id = user.id)
+    seller = owner.selling.values_list("id", flat=True)
+    if int(list_id) not in seller:
+        return HttpResponseRedirect("listing/"+list_id)
     
+    # Populate editing form
+    listing_info = AUCTION_LISTINGS.objects.get(id = list_id)
+    class editing_form (listing_form):
+        class Meta(listing_form.Meta):
+            exclude=('status', 'watchlist', 'owner','current_price',)
+    edit_form = editing_form(instance= listing_info)
+    
+    # Page contexts
+    CONTEXT={
+        "form": edit_form,
+        "info_msg": list_id,
+        "error_msg": None
+    }
+
+    ## GET request
+    if request.method == "GET":
+        return render(request, "auctions/edit_listing.html",CONTEXT)
+    
+    ## POST request
+    form = editing_form(request.POST, instance=listing_info)
+    if not form.is_valid():
+        CONTEXT["error_msg"] = form
+        return render(request, "auctions/edit_listing.html",CONTEXT)
+    new_edits = form.save(commit=False)
+    new_edits.save()
+    form.save_m2m()
+    return HttpResponseRedirect(reverse('index'))

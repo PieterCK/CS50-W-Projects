@@ -2,6 +2,12 @@
 
 {% block body %}
 {% load crispy_forms_tags %}
+<div class="row">
+    {% if viewer_status %}
+    <div>
+        <a href="{% viewer_status '/edit' %}" class="btn btn-primary" role="button"> Edit Listing</a>
+    </div>
+        {%endif%}
     <div class="border bidding_body">
         {% if info_msg %}
                 {{info_msg.as_p}}
@@ -58,4 +64,6 @@
             {% crispy form %}
         {% endif %}
     </div>
+</div>
+    
 {% endblock %}

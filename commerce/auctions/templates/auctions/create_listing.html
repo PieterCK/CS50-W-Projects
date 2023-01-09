@@ -19,8 +19,9 @@
                     {% endfor %}
                 </ul>
             {% else %}
-                {% crispy form %}
-                
+            {% if form %}
+                {% crispy form %}  
+            {% endif %}
             {% endif %}
         </div>
     </div>
