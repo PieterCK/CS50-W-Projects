@@ -37,7 +37,6 @@ class listing_form(ModelForm):
             self.helper.form_action = reverse_lazy('create_listing')
             self.helper.add_input(Submit('submit', 'List'))
             
-    
 
 def auto_bidding_form(min_bid, item_id):
     class bidding_form(forms.Form):

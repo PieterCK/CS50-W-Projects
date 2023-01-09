@@ -160,3 +160,7 @@ def create_listing(request):
     NEW_LISTING = AUCTION_LISTINGS.objects.get(
         title=form.cleaned_data["title"])
     return HttpResponseRedirect("listing/"+str(NEW_LISTING.id))
+
+@login_required(login_url='login')
+def edit_listing(request, list_id):
+    
