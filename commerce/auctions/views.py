@@ -147,6 +147,7 @@ def watchlist(request):
 
 @login_required(login_url='login')
 def create_listing(request):
+    listing_forms = modelform_factory(AUCTION_LISTINGS, fields=)
     if request.method == "GET":
         return render(request, "auctions/create_listing.html", {"form": listing_form})
     form = listing_form(request.POST)
