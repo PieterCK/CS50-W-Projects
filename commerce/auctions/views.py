@@ -88,7 +88,6 @@ def listing(request, list_id):
     viewer_status= None
     if int(list_id) in seller:
         viewer_status = user.id
-    ### TO DO: install edit listing button for owner of listing
     
     # Bidding Infos
     bidders_info = listing.past_bids.all()

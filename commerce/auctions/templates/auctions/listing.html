@@ -5,7 +5,8 @@
 <div class="row">
     {% if viewer_status %}
     <div>
-        <a href="{% viewer_status '/edit' %}" class="btn btn-primary" role="button"> Edit Listing</a>
+        <a href="{%url 'edit_listing' listing.id%}" class="btn btn-primary" role="button"> Edit Listing</a>
+        <a href="{%url 'edit_listing' listing.id%}" class="btn btn-primary" role="button"> Close Auction</a>
     </div>
         {%endif%}
     <div class="border bidding_body">
