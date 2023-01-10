@@ -5,6 +5,7 @@
         <div class="listing_body ">
             {% if listings %}
             {% for listing in listings %}
+            {% if listing.status == True %}
             <a href="{% url 'lists' listing.id %}" class="listing_wrp">
                 <div class="border">
                     {% if listing.image_url %}
@@ -16,6 +17,7 @@
                     <p>Seller = {{listing.owner}}</p>
                 </div>
             </a>
+            {% endif %}
             {% endfor %}
             {% endif %}
         </div>

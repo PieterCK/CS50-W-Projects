@@ -114,11 +114,11 @@ def listing(request, list_id):
         "viewer_status": viewer_status
     }
 
-    # GET Request handler
+    ## GET Request handler
     if request.method == "GET":
         return render(request, "auctions/listing.html", CONTEXT)
 
-    # POST Request handler
+    ## POST Request handler
     bid_form = auto_bidding_form(top_bid, list_id)
     form = bid_form(request.POST)
     if not form.is_valid():
@@ -135,7 +135,9 @@ def listing(request, list_id):
         amount=new_bid,
         bid_item=listing
     )
+    listing.current_price = new_bid
     NEW_BID.save()
+    listing.save()
     return HttpResponseRedirect("listing/"+str(listing.id))
 
 
@@ -194,11 +196,11 @@ def edit_listing(request, list_id):
         "error_msg": None
     }
 
-    ## GET request
+    ## GET request handler
     if request.method == "GET":
         return render(request, "auctions/edit_listing.html",CONTEXT)
     
-    ## POST request
+    ## POST request handler
     form = editing_form(request.POST, instance=listing_info)
     if not form.is_valid():
         CONTEXT["error_msg"] = form
@@ -207,3 +209,16 @@ def edit_listing(request, list_id):
     new_edits.save()
     form.save_m2m()
     return HttpResponseRedirect(reverse('index'))
+
+@login_required(login_url='login')
+def close_auction(request, list_id):
+    user = request.user
+    
+    ## GET request handler
+    if request.method == "GET":
+        listing = AUCTION_LISTINGS.objects.get(id=list_id)
+        if listing.owner.id != user.id:
+            return HttpResponseRedirect(reverse('index'))
+        listing.status = False
+        listing.save()
+        return HttpResponseRedirect(reverse('index')) 
