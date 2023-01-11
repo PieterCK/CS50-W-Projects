@@ -1,12 +1,12 @@
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render, redirect
+from django.shortcuts import render
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
-from .utils import listing_form, auto_bidding_form
-from .models import User, AUCTION_LISTINGS, CATALOG, BIDS
-from django.forms import modelform_factory
+from .utils import listing_form, auto_bidding_form, comment_form
+from .models import User, AUCTION_LISTINGS, CATALOG, BIDS, COMMENT_SECTION
+
 
 def index(request):
     active_listings = AUCTION_LISTINGS.objects.all()
@@ -91,7 +91,7 @@ def listing(request, list_id):
     
     # Bidding Infos
     bidders_info = listing.past_bids.all()
-    top_bid = 0
+    top_bid = listing.current_price
     if bidders_info:
         top_bid = max(bidders_info.values_list("amount", flat=True))
 
@@ -103,6 +103,9 @@ def listing(request, list_id):
     if watchlist:
         form_value = "[V] Watchlist"
 
+    # Listing Comments
+    comment_content = listing.comments.all()
+
     # Page Context
     CONTEXT = {
         "listing": listing,
@@ -111,7 +114,9 @@ def listing(request, list_id):
         "bidders_info": bidders_info,
         "error_msg": None,
         "info_msg": None,
-        "viewer_status": viewer_status
+        "viewer_status": viewer_status,
+        "comment_section": comment_content,
+        "comment_form": comment_form
     }
 
     ## GET Request handler
@@ -138,7 +143,7 @@ def listing(request, list_id):
     listing.current_price = new_bid
     NEW_BID.save()
     listing.save()
-    return HttpResponseRedirect("listing/"+str(listing.id))
+    return HttpResponseRedirect(reverse("lists", args=[list_id]))
 
 
 @login_required(login_url='login')
@@ -213,7 +218,7 @@ def edit_listing(request, list_id):
 @login_required(login_url='login')
 def close_auction(request, list_id):
     user = request.user
-    
+
     ## GET request handler
     if request.method == "GET":
         listing = AUCTION_LISTINGS.objects.get(id=list_id)
@@ -222,3 +227,20 @@ def close_auction(request, list_id):
         listing.status = False
         listing.save()
         return HttpResponseRedirect(reverse('index')) 
+
+@login_required(login_url='login')
+def comment(request, list_id):
+    user = request.user
+
+    ## GET request handler
+    if request.method == "GET":
+        return HttpResponseRedirect(reverse('index'))
+    f = comment_form(request.POST)
+    if not f.is_valid():
+        return HttpResponseRedirect(reverse('index'))
+    new_comment = f.save(commit=False)
+    new_comment.origin = User.objects.get(id=user.id)
+    new_comment.post = AUCTION_LISTINGS.objects.get(id=list_id)
+    new_comment.save()
+    f.save_m2m()
+    return HttpResponseRedirect(reverse("lists", args=[list_id]))

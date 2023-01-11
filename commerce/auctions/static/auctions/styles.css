@@ -54,9 +54,24 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
+    flex-grow: 1;
 }
 
 .listing_img2 {
     width:340px;
     height:340px;
+}
+
+.contain {
+    display: flex;
+    flex-direction: row;
+
+}
+.contain2 {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    padding: 10px;
+    margin: 5px;
+    
 }

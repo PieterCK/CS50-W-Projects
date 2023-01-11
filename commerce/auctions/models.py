@@ -36,7 +36,7 @@ class BIDS(models.Model):
 class COMMENT_SECTION(models.Model):
     comment_content = models.CharField(max_length = 1000)
     origin = models.ForeignKey(User, on_delete=models.CASCADE, related_name="commented")
-    post = models.ManyToManyField(AUCTION_LISTINGS, blank=True, related_name="comments")
+    post = models.ForeignKey(AUCTION_LISTINGS, on_delete=models.CASCADE, default=None, related_name="comments")
 
     def __str__(self):
         return f"{self.origin} has commented on {self.post}"
