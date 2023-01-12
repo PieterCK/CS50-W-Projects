@@ -14,7 +14,7 @@ class listing_form(ModelForm):
     class Meta:
             model = AUCTION_LISTINGS
             fields='__all__' 
-            exclude=('status', 'watchlist', 'owner')
+            exclude=('status', 'watchlist', 'owner', 'sold_to')
             widgets = {
                 'title': forms.TextInput(attrs={'placeholder': "Jakes Bike"}),
                 'description':forms.Textarea(attrs={'placeholder': 'Max 1000 words'}),

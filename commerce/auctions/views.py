@@ -109,7 +109,7 @@ def listing(request, list_id):
     # Recognize listing owner
     owner = User.objects.get(id = user.id)
     seller = owner.selling.values_list("id", flat=True)
-    if int(list_id) == seller:
+    if int(list_id) in seller:
         CONTEXT["viewer_status"] = user.id 
         return render(request, "auctions/listing.html", CONTEXT)
 
@@ -189,7 +189,7 @@ def edit_listing(request, list_id):
     listing_info = AUCTION_LISTINGS.objects.get(id = list_id)
     class editing_form (listing_form):
         class Meta(listing_form.Meta):
-            exclude=('status', 'watchlist', 'owner','current_price',)
+            exclude=('status', 'watchlist', 'owner','current_price','sold_to',)
     edit_form = editing_form(instance= listing_info)
     
     # Page contexts

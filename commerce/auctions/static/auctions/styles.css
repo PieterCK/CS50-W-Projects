@@ -23,6 +23,7 @@ body {
 
 .listing_wrp {
     color:black;
+    text-decoration:none;
 }
 
 .listing_wrp:hover {
