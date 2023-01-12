@@ -75,3 +75,8 @@ body {
     margin: 5px;
     
 }
+
+.listing_box {
+    display:block;
+    overflow:hidden;
+}

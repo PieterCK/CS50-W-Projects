@@ -77,54 +77,55 @@ def category(request, specified_category):
 
 
 def listing(request, list_id):
-    
     # General Info
     listing = AUCTION_LISTINGS.objects.get(id=list_id)
-    user = request.user
+    user = request.user   
 
-    # Recognize listing owner
-    owner = User.objects.get(id = user.id)
-    seller = owner.selling.values_list("id", flat=True)
-    viewer_status= None
-    if int(list_id) in seller:
-        viewer_status = user.id
-    
     # Bidding Infos
     bidders_info = listing.past_bids.all()
     top_bid = listing.current_price
-    if bidders_info:
-        top_bid = max(bidders_info.values_list("amount", flat=True))
-
-    # Watchlist mechanism
-    watchlist = False
-    if user.id:
-        watchlist = user.watched.filter(id=listing.id)
-    form_value = "Watchlist"
-    if watchlist:
-        form_value = "[V] Watchlist"
-
-    # Listing Comments
-    comment_content = listing.comments.all()
 
     # Page Context
     CONTEXT = {
         "listing": listing,
-        "form_value": form_value,
-        "form": auto_bidding_form(top_bid, list_id),
+        "form_value": "Watchlist",
+        "form_class": "btn btn-secondary",
+        "form": auto_bidding_form(top_bid),
         "bidders_info": bidders_info,
         "error_msg": None,
         "info_msg": None,
-        "viewer_status": viewer_status,
-        "comment_section": comment_content,
+        "viewer_status": None,
+        "comment_section": listing.comments.all(),
         "comment_form": comment_form
     }
+    if not user.is_authenticated:
+        return HttpResponseRedirect(reverse("login"))
+        
+    # Watchlist mechanism
+    if user.watched.filter(id=listing.id):
+        CONTEXT["form_value"] = "In Watchlist"
+        CONTEXT["form_class"] = "btn btn-success"
+
+    # Recognize listing owner
+    owner = User.objects.get(id = user.id)
+    seller = owner.selling.values_list("id", flat=True)
+    if int(list_id) == seller:
+        CONTEXT["viewer_status"] = user.id 
+        return render(request, "auctions/listing.html", CONTEXT)
+
+    # Reroute if listing is closed
+    if listing.status:
+        return render(request, "auctions/listing.html", CONTEXT)
+    if user.id == listing.sold_to.id:
+        CONTEXT["info_msg"] = "Congratulations, you've won the bid for"
+        return render(request, "auctions/success_bid.html", CONTEXT)
 
     ## GET Request handler
     if request.method == "GET":
         return render(request, "auctions/listing.html", CONTEXT)
-
+    
     ## POST Request handler
-    bid_form = auto_bidding_form(top_bid, list_id)
+    bid_form = auto_bidding_form(top_bid)
     form = bid_form(request.POST)
     if not form.is_valid():
         CONTEXT["form"] = form
@@ -132,9 +133,6 @@ def listing(request, list_id):
     new_bid = form.cleaned_data["bid"]
 
     # Process new bid
-    if new_bid <= top_bid:
-        CONTEXT["error_msg"] = "Invalid Bid Amount, Please Try Again."
-        return render(request, "auctions/listing.html", CONTEXT)
     NEW_BID = BIDS(
         bidder=User.objects.get(id=user.id),
         amount=new_bid,
@@ -150,7 +148,7 @@ def listing(request, list_id):
 def watchlist(request):
     user = request.user
     if request.method == "GET":
-        watchlist = user.watched.all()
+        watchlist = user.watched.exclude(status=False).all()
         return render(request, "auctions/watchlist.html", {"watchlist": watchlist})
     listing_id = request.POST["listing"]
     if request.POST["status"] == "Watchlist":
@@ -220,13 +218,20 @@ def close_auction(request, list_id):
     user = request.user
 
     ## GET request handler
-    if request.method == "GET":
-        listing = AUCTION_LISTINGS.objects.get(id=list_id)
-        if listing.owner.id != user.id:
-            return HttpResponseRedirect(reverse('index'))
-        listing.status = False
-        listing.save()
+    if request.method == "POST":
         return HttpResponseRedirect(reverse('index')) 
+    listing = AUCTION_LISTINGS.objects.get(id=list_id)
+    if listing.owner.id != user.id:
+        return HttpResponseRedirect(reverse('index'))
+    
+    # Register & update new listing status
+    bidders = listing.past_bids.values_list("amount", flat=True)
+    top_bidder = listing.past_bids.get(amount = max(bidders))
+    listing.status = False
+    listing.sold_to = top_bidder.bidder
+    listing.save()
+    return HttpResponseRedirect(reverse('index'))
+    
 
 @login_required(login_url='login')
 def comment(request, list_id):
@@ -244,3 +249,13 @@ def comment(request, list_id):
     new_comment.save()
     f.save_m2m()
     return HttpResponseRedirect(reverse("lists", args=[list_id]))
+
+@login_required(login_url='login')
+def history(request):
+    USER = User.objects.get(id=request.user.id)
+    CONTEXT={
+        "buy_history": USER.bougt.all(),
+        "listing_history": USER.selling.all(),
+        "bidding_history": USER.bid_by.all()
+    }
+    return render(request, "auctions/history.html", CONTEXT)

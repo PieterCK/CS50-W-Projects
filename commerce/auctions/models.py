@@ -19,6 +19,7 @@ class AUCTION_LISTINGS(models.Model):
     image_url = models.URLField(blank=True)
     current_price = models.FloatField(default=1)
     owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name="selling")
+    sold_to = models.ForeignKey(User, on_delete=models.CASCADE, default=None, null=True,related_name="bougt")
     status = models.BooleanField(default = True)
     watchlist = models.ManyToManyField(User, blank=True, related_name="watched")
 

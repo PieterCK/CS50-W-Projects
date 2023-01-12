@@ -10,7 +10,7 @@
 <form action="{% url 'watchlist' %}" method="POST">
     {% csrf_token %}
     <input type="hidden", name="listing", value="{{listing.id}}">
-    <input type="submit" class="btn btn-secondary btn-sm" name ="status" value="{{form_value}}">
+    <input type="submit" class="{{form_class}}" name ="status" value="{{form_value}}">
 </form>
 </span>
     
@@ -21,18 +21,22 @@
                 {% endif %}
             <figure class="figure">
                 <img src="{{listing.image_url}}" class="figure-img img-fluid rounded listing_img2" alt="{{listing.title}}">
-                <figcaption class="figure-caption">Title = {{listing.title}}</figcaption>
+                <figcaption class="figure-caption"><h3><b>{{listing.title}}</b></h3></figcaption>
               </figure>
             <div class="border coloumn">
-                <div>
+                <div class="border-bottom">
                     <h5>Description</h5>
                     {{listing.description}}
                 </div>
-                <div>
+                <div class="border-bottom">
                     <h5>Price</h5> 
                     {{listing.current_price}}
                 </div>
-                <div>
+                <div class="border-bottom">
+                    <h5>Quantity</h5> 
+                    {{listing.quantity}}
+                </div>
+                <div class="border-bottom">
                     <h5>Seller</h5>
                     {{listing.owner}}
                 </div>
