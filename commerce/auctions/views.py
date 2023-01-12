@@ -72,7 +72,7 @@ def categories(request):
 
 def category(request, specified_category):
     category_id = CATALOG.objects.get(category=specified_category)
-    category = AUCTION_LISTINGS.objects.filter(category=category_id.id)
+    category = AUCTION_LISTINGS.objects.filter(category=category_id.id, status=True)
     return render(request, "auctions/category.html", {"category": category})
 
 
@@ -90,7 +90,7 @@ def listing(request, list_id):
         "listing": listing,
         "form_value": "Watchlist",
         "form_class": "btn btn-secondary",
-        "form": auto_bidding_form(top_bid),
+        "form": auto_bidding_form(top_bid, list_id),
         "bidders_info": bidders_info,
         "error_msg": None,
         "info_msg": None,
@@ -98,34 +98,34 @@ def listing(request, list_id):
         "comment_section": listing.comments.all(),
         "comment_form": comment_form
     }
-    if not user.is_authenticated:
-        return HttpResponseRedirect(reverse("login"))
-        
-    # Watchlist mechanism
-    if user.watched.filter(id=listing.id):
-        CONTEXT["form_value"] = "In Watchlist"
-        CONTEXT["form_class"] = "btn btn-success"
-
-    # Recognize listing owner
-    owner = User.objects.get(id = user.id)
-    seller = owner.selling.values_list("id", flat=True)
-    if int(list_id) in seller:
-        CONTEXT["viewer_status"] = user.id 
-        return render(request, "auctions/listing.html", CONTEXT)
-
-    # Reroute if listing is closed
-    if listing.status:
-        return render(request, "auctions/listing.html", CONTEXT)
-    if user.id == listing.sold_to.id:
-        CONTEXT["info_msg"] = "Congratulations, you've won the bid for"
-        return render(request, "auctions/success_bid.html", CONTEXT)
 
     ## GET Request handler
     if request.method == "GET":
+        if not user.is_authenticated:
+            return render(request, "auctions/listing.html", CONTEXT)
+            
+        # Watchlist mechanism
+        if user.watched.filter(id=listing.id):
+            CONTEXT["form_value"] = "In Watchlist"
+            CONTEXT["form_class"] = "btn btn-success"
+
+        # Recognize listing owner
+        owner = User.objects.get(id = user.id)
+        seller = owner.selling.values_list("id", flat=True)
+        if int(list_id) in seller:
+            CONTEXT["viewer_status"] = user.id 
+            return render(request, "auctions/listing.html", CONTEXT)
+
+        # Reroute if listing is closed
+        if listing.status:
+            return render(request, "auctions/listing.html", CONTEXT)
+        if user.id == listing.sold_to.id:
+            CONTEXT["info_msg"] = "Congratulations, you've won the bid for"
+            return render(request, "auctions/success_bid.html", CONTEXT)
         return render(request, "auctions/listing.html", CONTEXT)
     
     ## POST Request handler
-    bid_form = auto_bidding_form(top_bid)
+    bid_form = auto_bidding_form(top_bid, list_id)
     form = bid_form(request.POST)
     if not form.is_valid():
         CONTEXT["form"] = form
@@ -141,6 +141,7 @@ def listing(request, list_id):
     listing.current_price = new_bid
     NEW_BID.save()
     listing.save()
+    CONTEXT["form"] = form
     return HttpResponseRedirect(reverse("lists", args=[list_id]))
 
 

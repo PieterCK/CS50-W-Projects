@@ -30,14 +30,14 @@ class listing_form(ModelForm):
             self.helper.add_input(Submit('submit', 'List'))
             
 
-def auto_bidding_form(min_bid):
+def auto_bidding_form(min_bid, list_id):
     class bidding_form(forms.Form):
         def __init__(self, *args, **kwargs):
             super().__init__(*args, **kwargs)
             self.helper = FormHelper()
             self.helper.form_class = 'blueForms'
             self.helper.form_method = 'post'
-            self.helper.form_action = ()
+            self.helper.form_action = reverse_lazy('lists', args=[list_id])
             self.helper.add_input(Submit('submit', 'Bid'))
         bid = forms.DecimalField(required=True, max_digits=14, decimal_places=2, min_value=min_bid+0.1,
                                  widget=forms.NumberInput(attrs={'placeholder': '$'+str(min_bid+0.1)}))
