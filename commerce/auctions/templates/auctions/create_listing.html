@@ -9,7 +9,7 @@
         <div>{{ message }}</div>
     {% endif %}
     <div class="form_shell">
-        <div class="form_wrp">
+        <div class="form_wrp ">
             {% if form.errors %}
                 <ul class="errorlist">
                     {% for field in form %}
@@ -19,7 +19,9 @@
                     {% endfor %}
                 </ul>
             {% else %}
-            {% crispy form %}
+            {% if form %}
+                {% crispy form %}  
+            {% endif %}
             {% endif %}
         </div>
     </div>

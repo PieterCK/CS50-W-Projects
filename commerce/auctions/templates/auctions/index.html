@@ -5,17 +5,19 @@
         <div class="listing_body ">
             {% if listings %}
             {% for listing in listings %}
+            {% if listing.status == True %}
             <a href="{% url 'lists' listing.id %}" class="listing_wrp">
                 <div class="border">
                     {% if listing.image_url %}
                     <img src="{{listing.image_url}}" class="listing_img">
                     {% endif %}
-                    <p>Title = {{listing.title}}</p>
+                    <p><h3>{{listing.title}}</h3></p>
                     <p>Description = {{listing.description}}</p>
-                    <p>Price = {{listing.current_price}}</p>
+                    <p>Current Price = {{listing.current_price}}</p>
                     <p>Seller = {{listing.owner}}</p>
                 </div>
             </a>
+            {% endif %}
             {% endfor %}
             {% endif %}
         </div>

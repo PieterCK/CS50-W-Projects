@@ -1,0 +1,79 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+<div class="border bidding_body">
+    {% if info_msg %}
+           <h2>{{info_msg}} {{listing.title}}</h2> 
+        {% endif %}
+    <figure class="figure">
+        <img src="{{listing.image_url}}" class="figure-img img-fluid rounded listing_img2" alt="{{listing.title}}">
+        <figcaption class="figure-caption"><h3><b>{{listing.title}}</b></h3></figcaption>
+      </figure>
+    <div class="border coloumn">
+        <div class="border-bottom">
+            <h5>Description</h5>
+            {{listing.description}}
+        </div>
+        <div class="border-bottom">
+            <h5>Bougt at</h5> 
+            {{listing.current_price}}
+        </div>
+        <div class="border-bottom">
+            <h5>Quantity</h5> 
+            {{listing.quantity}}
+        </div>
+        <div class="border-bottom">
+            <h5>Sold By</h5>
+            {{listing.owner}}
+        </div>
+    </div>
+<div>
+                <table class="table">
+                    <thead>
+                      <tr>
+                        <th scope="col">Bidder</th>
+                        <th scope="col">Amount</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                    {% if bidders_info %}
+                        {% for info in bidders_info %}
+                        <tr>
+                            <td>{{info.bidder}}</td>
+                            <td>{{info.amount}}</td>
+                        </tr>
+                        {%endfor%}
+                    {%endif%}
+                        <tr>
+                            <td>-</td>
+                            <td>-</td>
+                        </tr>
+                    </tbody>
+                  </table>
+            </div>
+</div>
+<div>
+    <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">Bidder</th>
+            <th scope="col">Amount</th>
+          </tr>
+        </thead>
+        <tbody>
+        {% if bidders_info %}
+            {% for info in bidders_info %}
+            <tr>
+                <td>{{info.bidder}}</td>
+                <td>{{info.amount}}</td>
+            </tr>
+            {%endfor%}
+        {%endif%}
+            <tr>
+                <td>-</td>
+                <td>-</td>
+            </tr>
+        </tbody>
+      </table>
+</div>
+{% endblock %}

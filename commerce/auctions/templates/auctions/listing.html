@@ -2,47 +2,76 @@
 
 {% block body %}
 {% load crispy_forms_tags %}
-    <div class="border bidding_body">
-        {% if info_msg %}
-                {{info_msg.as_p}}
-            {% endif %}
-        <figure class="figure">
-            <img src="{{listing.image_url}}" class="figure-img img-fluid rounded listing_img2" alt="{{listing.title}}">
-            <figcaption class="figure-caption">Title = {{listing.title}}</figcaption>
-          </figure>
-        <div>Description = {{listing.description}}</div>
-        <p>Price = {{listing.current_price}}</p>
-        <p>Seller = {{listing.owner}}</p>
-        <form action="{% url 'watchlist' %}" method="POST">
-            {% csrf_token %}
-            <input type="hidden", name="listing", value="{{listing.id}}">
-            <input type="submit" class="btn btn-secondary btn-sm" name ="status" value="{{form_value}}">
-        </form>
-        <div>
-            <table class="table">
-                <thead>
-                  <tr>
-                    <th scope="col">Bidder</th>
-                    <th scope="col">Amount</th>
-                  </tr>
-                </thead>
-                <tbody>
-                {% if bidders_info %}
-                    {% for info in bidders_info %}
-                    <tr>
-                        <td>{{info.bidder}}</td>
-                        <td>{{info.amount}}</td>
-                    </tr>
-                    {%endfor%}
-                {%endif%}
-                    <tr>
-                        <td>-</td>
-                        <td>-</td>
-                    </tr>
-                </tbody>
-              </table>
+<span class="col">
+    {% if viewer_status %}
+    <a href="{%url 'edit_listing' listing.id%}" class="btn btn-primary" role="button"> Edit Listing</a>
+    <a href="{%url 'close_auction' listing.id%}" method="POST" class="btn btn-primary" role="button"> Close Auction</a>
+    {%endif%}
+<form action="{% url 'watchlist' %}" method="POST">
+    {% csrf_token %}
+    <input type="hidden", name="listing", value="{{listing.id}}">
+    <input type="submit" class="{{form_class}}" name ="status" value="{{form_value}}">
+</form>
+</span>
+    
+<div class="contain">
+        <div class="border bidding_body">
+            {% if info_msg %}
+                    {{info_msg.as_p}}
+                {% endif %}
+            <figure class="figure">
+                <img src="{{listing.image_url}}" class="figure-img img-fluid rounded listing_img2" alt="{{listing.title}}">
+                <figcaption class="figure-caption"><h3><b>{{listing.title}}</b></h3></figcaption>
+              </figure>
+            <div class="border coloumn">
+                <div class="border-bottom">
+                    <h5>Description</h5>
+                    {{listing.description}}
+                </div>
+                <div class="border-bottom">
+                    <h5>Current Price</h5> 
+                    {{listing.current_price}}
+                </div>
+                <div class="border-bottom">
+                    <h5>Quantity</h5> 
+                    {{listing.quantity}}
+                </div>
+                <div class="border-bottom">
+                    <h5>Seller</h5>
+                    {{listing.owner}}
+                </div>
+            </div>
+            
+           
+            
         </div>
-        {% if form.errors %}
+        <div class="border contain2">
+            <div>
+                <table class="table">
+                    <thead>
+                      <tr>
+                        <th scope="col">Bidder</th>
+                        <th scope="col">Amount</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                    {% if bidders_info %}
+                        {% for info in bidders_info %}
+                        <tr>
+                            <td>{{info.bidder}}</td>
+                            <td>{{info.amount}}</td>
+                        </tr>
+                        {%endfor%}
+                    {%endif%}
+                        <tr>
+                            <td>-</td>
+                            <td>-</td>
+                        </tr>
+                    </tbody>
+                  </table>
+            </div>
+            <div>
+            {% if form.errors %}
             <ul class="errorlist">
                 {% for field in form %}
                     {% for error in field.errors %}
@@ -50,12 +79,35 @@
                     {% endfor %}
                 {% endfor %}
             </ul>
-        {% endif %}
-        {% if user.is_authenticated %}
-            {% if error_msg %}
-                {{error_msg.as_p}}
             {% endif %}
-            {% crispy form %}
-        {% endif %}
+            {% if user.is_authenticated %}
+                {% if error_msg %}
+                    {{error_msg.as_p}}
+                {% endif %}
+                {% if not viewer_status %}
+                {% crispy form %}
+                {% endif %}
+            {% endif %}
+            </div>
+        </div>
+        <div class="border contain2">
+            <form action="{% url 'comment' listing.id%}" method="POST">
+                {% csrf_token %}
+                {{comment_form}}
+                <input type="submit" value="Comment">
+            </form>
+            {%if comment_section%}
+                {%for comment in comment_section%}
+                    <div class="border-bottom">
+                        <h6>{{comment.origin}}</h6>
+                        <p>{{comment.comment_content}}</p>
+                    </div>
+                {% endfor %}
+            {% else %}
+                    <div>No comment yet..</div>
+            {% endif %}
+        </div>
     </div>
+</div>
+    
 {% endblock %}

@@ -1,0 +1,51 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+<div class="contain">
+    <div class="border contain2">
+        <h3>Successful Purchase</h3>
+        {% for listing in buy_history %}
+            <a href="{% url 'lists' listing.id %}" class="listing_wrp">
+                <div class="border listing_box">
+                    {% if listing.image_url %}
+                    <img src="{{listing.image_url}}" class="listing_img">
+                    {% endif %}
+                    <p>Title = {{listing.title}}</p>
+                    <p>Description = {{listing.description}}</p>
+                    <p>Price = {{listing.current_price}}</p>
+                    <p>Seller = {{listing.owner}}</p>
+                </div>
+            </a>
+        {% endfor %}
+    </div>
+    <div class="border contain2">
+        <h3>Past Listings</h3>
+        {% for listing in listing_history %}
+            <a href="{% url 'lists' listing.id %}" class="listing_wrp">
+                <div class="border">
+                    {% if listing.image_url %}
+                    <img src="{{listing.image_url}}" class="listing_img">
+                    {% endif %}
+                    <p>Title = {{listing.title}}</p>
+                    <p>Description = {{listing.description}}</p>
+                    <p>Price = {{listing.current_price}}</p>
+                    <p>Seller = {{listing.owner}}</p>
+                </div>
+            </a>
+        {% endfor %}
+    </div>
+    <div class="border contain2">
+        <h3>Past Bids</h3>
+        {%if bidding_history%}
+                {%for bid in bidding_history%}
+                    <div class="border-bottom">
+                        <h6>{{bid.bid_item.title}}</h6>
+                        <p>{{bid.amount}}</p>
+                    </div>
+                {% endfor %}
+            {% else %}
+                    <div>No bid yet..</div>
+            {% endif %}
+    </div>
+</div>
+{% endblock %}
