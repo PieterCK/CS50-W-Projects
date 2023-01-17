@@ -1,3 +1,43 @@
 textarea {
     min-height: 400px;
 }
+
+.mail-container {
+    display:none;
+    padding: 10px;
+    margin: 10px;
+    border:1px solid grey;
+    border-radius: 8px;
+}
+
+.main-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    flex-flow: row wrap;
+    align-items: stretch;
+    
+}
+
+.layout-container1 {
+    flex-grow: 1;
+}
+
+.layout-container2 {
+    flex-grow: 5;
+    display:none;
+}
+
+.mail-container2 {
+    display:none;
+    padding: 10px;
+    margin: 10px;
+    border:1px solid grey;
+    border-radius: 8px;
+}
+
+.mail-body {
+    margin:15px;
+    padding: 10px;
+    border: 1px solid gainsboro;
+}

@@ -12,6 +12,15 @@
     <hr>
 
     <div id="emails-view">
+        <div id="emails-type"></div>
+        <div class="main-container">
+            <div class="layout-container1">
+                <div id="emails-list"></div>
+            </div>
+            <div class="layout-container2">
+                
+            </div>
+        </div>
     </div>
 
     <div id="compose-view">
@@ -30,6 +39,25 @@
             <input type="submit" class="btn btn-primary"/>
         </form>
     </div>
+
+    <div class=" mail-container">
+        <a class="mail-link">
+            <h3 class="mail-subject"></h3>
+            <div class="mail-from"></div>
+            <div class="mail-time"></div>
+        </a>
+    </div>
+
+    <div class=" mail-container2">
+        <button class="btn btn-sm mail-archive">Archive</button>
+        <div class="mail-subject"></div>
+        <div class="mail-from"></div>
+        <div class="mail-to"></div>
+        <div class="mail-time"></div>
+        <div class="mail-body"></div>
+        <button class="btn btn-sm btn-outline-secondary mail-reply">Reply</button>
+    </div>
+
 {% endblock %}
 
 {% block script %}
