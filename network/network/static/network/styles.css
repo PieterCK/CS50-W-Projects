@@ -1,0 +1,17 @@
+.textArea {
+    display: flex;
+    flex-direction: column;
+}
+
+.textArea>textarea {
+    border: 1px solid gainsboro;
+    padding: 12px;
+    border-radius: 4px;
+    width: 40%;
+    height: 90px; 
+    margin-bottom: 5px;
+}
+
+#post_form {
+    margin: 20px;
+}
